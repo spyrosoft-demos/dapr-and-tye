@@ -1,0 +1,16 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: dapr-demo
+
+services:
+- name: tweet-reader
+  project: tweet-reader/tweet-reader.csproj
+
+extensions:
+- name: dapr
+  log-level: debug
+  components-path: "./components/local"
