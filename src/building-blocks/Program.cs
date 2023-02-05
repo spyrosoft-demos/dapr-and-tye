@@ -26,7 +26,7 @@ var daprClient = app.Services.GetRequiredService<DaprClient>();
 //-------------------------------
 //  secrets building block
 //-------------------------------
-var secret = await daprClient.GetSecretAsync("local-secret-store", "twitter-secret");
+var secret = await daprClient.GetSecretAsync("local-secret-store", "myapp-secret");
 Console.WriteLine("secret keys: " + string.Join(",", secret.Keys));
 
 
@@ -56,21 +56,38 @@ var cfg = await daprClient.GetConfiguration("local-config-store", new List<strin
 
 
 //-------------------------------
+// pub sub
+//-------------------------------
+app.MapPost("pubsub-example", (TopicMessage msg, ILoggerFactory loggerFactory) =>
+{
+    var log = loggerFactory.CreateLogger("BuildingBlocks.PubSub.MyPubSub");
+    log.LogInformation("topic message received: {@Message} {TimeStamp:dddd, dd MMMM yyyy HH:mm:ss}", msg, DateTime.UtcNow);
+    return Results.Ok();
+}).WithTopic(TopicMessage.PubsubName, TopicMessage.TopicName);
+
+
+//-------------------------------
 //  input binding building block
 //-------------------------------
-app.MapPost("/notifications", (HttpRequest request, ILoggerFactory loggerFactory) =>
+app.MapPost("/notifications", async (ILoggerFactory loggerFactory) =>
 {
     var log = loggerFactory.CreateLogger("BuildingBlocks.InputBinding.Cron");
     log.LogInformation("cron notification received: {TimeStamp:dddd, dd MMMM yyyy HH:mm:ss}", DateTime.UtcNow);
+    
+    //  just to show pubsub publishing
+    await daprClient.PublishEventAsync(TopicMessage.PubsubName, TopicMessage.TopicName, new TopicMessage { Id = Guid.NewGuid(), Data = "Some dummy string payload" });
     return Results.Ok();
 });
 
-
-//-------------------------------
-// pub sub
-//-------------------------------
-
-
-
 app.MapGet("/api/health", () => FormattableString.Invariant($"{DateTime.UtcNow:dddd, dd MMMM yyyy HH:mm:ss}"));
 app.Run();
+
+class TopicMessage
+{
+    public const string PubsubName = "my-pubsub";
+    public const string TopicName = "demo-topic";
+
+
+    public Guid Id { get; set; }
+    public string? Data { get; set; }
+}
