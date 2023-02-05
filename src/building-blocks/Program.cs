@@ -1,5 +1,4 @@
 using Dapr.Client;
-using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -59,10 +58,10 @@ var cfg = await daprClient.GetConfiguration("local-config-store", new List<strin
 //-------------------------------
 //  input binding building block
 //-------------------------------
-app.MapPost("/notifications", (ILoggerFactory loggerFactory) => {
-    var log = loggerFactory.CreateLogger("Cron");
-    //var msg = FormattableString.Invariant($"cron notification received: {DateTime.UtcNow:dddd, dd MMMM yyyy HH:mm:ss}");
-    log.LogInformation("cron notification received: {TimeStamp:dddd, dd MMMM yyyy HH:mm:ss}", DateTime.UtcNow);    
+app.MapPost("/notifications", (HttpRequest request, ILoggerFactory loggerFactory) =>
+{
+    var log = loggerFactory.CreateLogger("BuildingBlocks.InputBinding.Cron");
+    log.LogInformation("cron notification received: {TimeStamp:dddd, dd MMMM yyyy HH:mm:ss}", DateTime.UtcNow);
     return Results.Ok();
 });
 
