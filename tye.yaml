@@ -7,8 +7,8 @@
 name: dapr-demo
 
 services:
-- name: tweet-reader
-  project: tweet-reader/tweet-reader.csproj
+- name: building-blocks
+  project: src/building-blocks/building-blocks.csproj
 
 extensions:
 - name: dapr

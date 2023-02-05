@@ -1,4 +1,5 @@
 using Dapr.Client;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -23,22 +24,30 @@ app.MapSubscribeHandler();
 // create client
 var daprClient = app.Services.GetRequiredService<DaprClient>();
 
+//-------------------------------
 //  secrets building block
+//-------------------------------
 var secret = await daprClient.GetSecretAsync("local-secret-store", "twitter-secret");
-Console.WriteLine(secret);
+Console.WriteLine("secret keys: " + string.Join(",", secret.Keys));
 
+
+//-------------------------------
 //  state building block
-const string json = """
+//-------------------------------
+const string stateJson = """
     "Root": {
         "key1": "abc",
         "key2": "123"
     }
     """;
-await daprClient.SaveStateAsync("local-state-store", "mystate", json);
+await daprClient.SaveStateAsync("local-state-store", "mystate", stateJson);
 var state = await daprClient.GetStateAsync<string>("local-state-store", "mystate");
-Console.WriteLine(state);
+Console.WriteLine("loaded state: " + state);
 
+
+//-------------------------------
 //  configuration building block
+//-------------------------------
 var keys = new List<string>
 {
     "proxy-setttings",
@@ -46,11 +55,22 @@ var keys = new List<string>
 };
 var cfg = await daprClient.GetConfiguration("local-config-store", new List<string>());
 
-//  bindings
-//  TODO: 
 
+//-------------------------------
+//  input binding building block
+//-------------------------------
+app.MapPost("/notifications", (ILoggerFactory loggerFactory) => {
+    var log = loggerFactory.CreateLogger("Cron");
+    //var msg = FormattableString.Invariant($"cron notification received: {DateTime.UtcNow:dddd, dd MMMM yyyy HH:mm:ss}");
+    log.LogInformation("cron notification received: {TimeStamp:dddd, dd MMMM yyyy HH:mm:ss}", DateTime.UtcNow);    
+    return Results.Ok();
+});
+
+
+//-------------------------------
 // pub sub
-//  TODO: 
+//-------------------------------
+
 
 
 app.MapGet("/api/health", () => FormattableString.Invariant($"{DateTime.UtcNow:dddd, dd MMMM yyyy HH:mm:ss}"));

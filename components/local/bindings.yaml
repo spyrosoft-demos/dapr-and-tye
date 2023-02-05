@@ -1,28 +1,10 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: tweets
+  name: notifications
 spec:
-  type: bindings.twitter
+  type: bindings.cron
   version: v1
   metadata:
-  - name: query
-    value: "game"  
-  - name: consumerKey
-    secretKeyRef:
-      name: twitter-secret
-      key:  consumer-key  
-  - name: consumerSecret
-    secretKeyRef:
-      name: twitter-secret
-      key:  consumer-secret 
-  - name: accessToken
-    secretKeyRef:
-      name: twitter-secret
-      key:  access-token 
-  - name: accessSecret
-    secretKeyRef:
-      name: twitter-secret
-      key:  access-secret  
-auth:
-  secretStore: local-secret-store
+  - name: schedule
+    value: "@every 5s" 
