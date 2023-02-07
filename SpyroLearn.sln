@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuckyNumberService", "LuckyNumberService\LuckyNumberService.csproj", "{ABB3DDD9-6CD5-4171-A5B9-CFB51904C74D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuckyNumberService", "src\LuckyNumberService\LuckyNumberService.csproj", "{ABB3DDD9-6CD5-4171-A5B9-CFB51904C74D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpyrosoftLearn", "SpyrosoftLearn\SpyrosoftLearn.csproj", "{321D8EB0-18C2-4C4C-A4BD-C84258285863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpyrosoftLearn", "src\SpyrosoftLearn\SpyrosoftLearn.csproj", "{321D8EB0-18C2-4C4C-A4BD-C84258285863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinnerSubscriberService", "WinnerSubscriberService\WinnerSubscriberService.csproj", "{A3D4FBC9-9ABF-4DB0-A86C-B114EB52F12D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinnerSubscriberService", "src\WinnerSubscriberService\WinnerSubscriberService.csproj", "{A3D4FBC9-9ABF-4DB0-A86C-B114EB52F12D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{DA1C5EC7-3AEA-4B31-B44E-1D14BD355FD0}"
+	ProjectSection(SolutionItems) = preProject
+		components\local\pubsub.yaml = components\local\pubsub.yaml
+		tye.yaml = tye.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
