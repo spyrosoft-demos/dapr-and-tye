@@ -20,9 +20,9 @@ namespace SpyrosoftLearn.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated??false)
             {
-                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                var user = await _userManager.FindByNameAsync(User.Identity.Name??string.Empty);
 
                 if (user == null)
                 {
