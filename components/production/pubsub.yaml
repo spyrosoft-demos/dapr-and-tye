@@ -1,11 +1,14 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: pubsub
+  name: my-pubsub
 spec:
   type: pubsub.redis
+  version: v1
   metadata:
   - name: redisHost
-    value: localhost:6379
+    value: spyro-demo.redis.cache.windows.net:6380
   - name: redisPassword
-    value: ""
+    value: QnBrqYI8GFlj2Dwa7Z1kZ8vcXtiqqpeE8AzCaGCiYgQ=
+  - name: enableTLS
+  - value: "true"
