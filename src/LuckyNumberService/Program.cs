@@ -32,4 +32,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Logger.LogInformation("Starting the app");
+using var scope = app.Services.CreateScope();
+var context = scope.ServiceProvider.GetRequiredService<RoundWinnerContext>();
+await context.Database.MigrateAsync();
 app.Run();

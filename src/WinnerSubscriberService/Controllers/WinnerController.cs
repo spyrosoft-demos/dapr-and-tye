@@ -13,11 +13,11 @@ namespace WinnerSubscriberService.Controllers
             _logger = logger;
         }
 
-        [Topic("pubsub", "newWinner")]
+        [Topic("my-pubsub", "newWinner")]
         [HttpPost("winner")]
         public void CreateWinner([FromBody] string winnerName)
         {
-            _logger.LogInformation($"Subscriber recieved winner name : {winnerName}");
+            _logger.LogInformation("Subscriber recieved winner name : {WinnerName}", winnerName);
         }
     }
 }

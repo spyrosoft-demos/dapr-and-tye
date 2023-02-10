@@ -27,7 +27,7 @@ namespace SpyrosoftLearn.Services
         public async Task PublishWinner(string winnerName)
         {
             //pubsub
-            await _daprClient.PublishEventAsync("pubsub", "newWinner", winnerName);
+            await _daprClient.PublishEventAsync("my-pubsub", "newWinner", winnerName);
         }
     }
 }
