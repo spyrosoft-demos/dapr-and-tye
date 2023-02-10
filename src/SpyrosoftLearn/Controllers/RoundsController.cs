@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Models;
 using SpyrosoftLearn.Services;
+using System.Data;
 
 namespace SpyrosoftLearn.Controllers
-{
+{    
     public class RoundsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +25,7 @@ namespace SpyrosoftLearn.Controllers
         }
 
         // GET: Rounds
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
               return _context.Rounds != null ? 
@@ -31,6 +34,7 @@ namespace SpyrosoftLearn.Controllers
         }
 
         // GET: Rounds/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Rounds == null)
@@ -49,6 +53,7 @@ namespace SpyrosoftLearn.Controllers
         }
 
         // GET: Rounds/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
 
@@ -67,6 +72,7 @@ namespace SpyrosoftLearn.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,CreatorName,IsActive,CreatedOn,FinishedOn")] Round round)
         {
             if (ModelState.IsValid)
@@ -91,6 +97,7 @@ namespace SpyrosoftLearn.Controllers
         }
 
         // GET: Rounds/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Rounds == null)
@@ -111,6 +118,7 @@ namespace SpyrosoftLearn.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Name,CreatorName,IsActive,CreatedOn,FinishedOn")] Round round)
         {
             if (id != round.Id)
@@ -151,6 +159,7 @@ namespace SpyrosoftLearn.Controllers
         }
 
         // GET: Rounds/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null || _context.Rounds == null)
@@ -171,6 +180,7 @@ namespace SpyrosoftLearn.Controllers
         // POST: Rounds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Rounds == null)
@@ -192,6 +202,7 @@ namespace SpyrosoftLearn.Controllers
           return (_context.Rounds?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GenerateWinnerNumber(int roundId)
         {
             try
@@ -242,6 +253,7 @@ namespace SpyrosoftLearn.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin,Default")]
         public async Task<IActionResult> JoinRound(int roundId)
         {
             try

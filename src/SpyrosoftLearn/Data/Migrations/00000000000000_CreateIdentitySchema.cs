@@ -191,6 +191,16 @@ namespace SpyrosoftLearn.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.Sql(@"
+                IF NOT EXISTS(SELECT 1 FROM AspNetRoles WHERE [Name] = 'Admin')
+                BEGIN
+	                INSERT INTO AspNetRoles(Id, Name, NormalizedName) VALUES (NEWID(), 'Admin', 'Admin' )
+                END
+                IF NOT EXISTS(SELECT 1 FROM AspNetRoles WHERE [Name] = 'Default')
+                BEGIN
+	                INSERT INTO AspNetRoles(Id, Name, NormalizedName) VALUES (NEWID(), 'Default', 'Default' )
+                END");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

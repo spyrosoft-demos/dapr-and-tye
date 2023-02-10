@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
@@ -49,6 +50,7 @@ namespace SpyrosoftLearn.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminIndex()
         {
             return View();
@@ -74,11 +76,6 @@ namespace SpyrosoftLearn.Controllers
                 .OrderByDescending(r => r.CreatedOn).ToListAsync();
 
             return View(round);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
