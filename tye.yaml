@@ -4,12 +4,14 @@
 # when you've given us a try, we'd love to know what you think:
 #    https://aka.ms/AA7q20u
 #
-name: dapr-demo
-
+name: spyrolearn
 services:
-- name: building-blocks
-  project: src/building-blocks/building-blocks.csproj
-
+- name: luckynumberservice
+  project: src/LuckyNumberService/LuckyNumberService.csproj
+- name: spyrosoftlearn
+  project: src/SpyrosoftLearn/SpyrosoftLearn.csproj
+- name: winnersubscriberservice
+  project: src/WinnerSubscriberService/WinnerSubscriberService.csproj
 extensions:
 - name: dapr
   log-level: debug

@@ -1,0 +1,106 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+#spyro-learn-img, #admin-img {
+    width: 100%;
+}
+
+.spyro-logo-img{
+    width:40px;
+}
+
+.form-group {
+    padding-bottom: 20px;
+}
+
+.navbar-dark {
+    background-color: #4d44c8 !important;
+    color: white;
+}
+
+footer {
+    background-color: #4d44c8 !important;
+    color: white;
+}
+
+.create-round-button {
+    background-color: #4d44c8 !important;
+    color: white;
+    width: 200px;
+    border-radius: 50px;
+    border: none;
+    height: 50px;
+    box-shadow: 3px 3px 10px 1px rgb(0,0,0);
+}
+
+.create-round-button:hover {
+    background-color: #8e88dd !important;
+    font-weight: bold;
+}
+
+.join-round-button {
+    background-color: #4d44c8 !important;
+    color: white;
+    width: 250px;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    height: 50px;
+    box-shadow: 3px 3px 10px 1px rgb(0,0,0);
+}
+
+.join-round-button:hover {
+    background-color: #8e88dd !important;
+    font-weight: bold;
+}
+
+.content-center {
+    text-align: center;
+    justify-content: center;
+}
+
+.landing-link{
+    font-size: 1.4rem;
+}
+
+.p-30{
+    margin-top:30px;
+}
+
+.p-50 {
+    margin-top: 50px;
+}
+
+.text-big {
+    font-size: 20px;
+}
+
+.join-round-img{
+    width:80%;
+    margin-left:10%;
+}
+
+.h1-winner {
+    font-size: 80px;
+    color: #4d44c8;
+}
+
+.create-round-button:disabled{
+    background-color: gray !important;
+}

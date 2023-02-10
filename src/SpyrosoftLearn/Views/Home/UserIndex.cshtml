@@ -1,0 +1,34 @@
+﻿@model List<Round>
+
+@{
+    ViewData["Title"] = "Please join the round";
+}
+
+<div class="container content-center">
+@if (Model == null || !Model.Any())
+{
+    <h2>There is no active rounds</h2>
+}
+else
+{
+        <h1>@ViewData["Title"]</h1>
+
+        @foreach (var round in Model)
+        {
+            <div class="row justify-content-sm-center p-30">
+                <div class="col-md-auto">
+                        <input type="button" class="join-round-button" value="Join Round: @round.Name" onclick="location.href='@Url.Action("JoinRound", "Rounds", new { roundId = round.Id })'" />
+                    </div>
+                </div>
+        }
+
+        <div class="row justify-content-sm-center content-center">
+            <div class="col-sm-4 p-30">
+                <img id="admin-img" src="~/images/redOrBlue.jpg" />
+            </div>
+        </div>
+   
+}
+</div>
+
+
