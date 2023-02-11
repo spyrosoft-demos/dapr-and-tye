@@ -104,3 +104,21 @@ footer {
 .create-round-button:disabled{
     background-color: gray !important;
 }
+
+.chart-container {
+    text-align: center;
+    width: 100%;
+    overflow: auto;
+    padding: 30px;
+}
+
+.chart-table-container {
+    width: 100%;
+    overflow: auto;
+    padding: 30px;
+}
+
+#messagesList {
+    margin-top: 20px;
+    list-style-type: none;
+}
