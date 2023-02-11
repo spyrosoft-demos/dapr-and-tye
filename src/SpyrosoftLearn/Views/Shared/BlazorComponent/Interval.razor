@@ -7,6 +7,7 @@
 
 <div class="chart-container">
      <h1>Catch the Time</h1>
+     <h2>@UserConfigNumber . @UserName</h2>
      <br/>
 
     <LineChart @ref="@horizontalLineChart" TItem="LiveDataPoint" OptionsObject="@horizontalLineChartOptions">
@@ -30,9 +31,7 @@
         <div class="row">
             <button class="create-round-button" @onclick="Send" disabled="@(!IsConnected)">Send</button>
         </div>
-        @UserName
-        @UserId
-        @UserConfigNumber
+
         <div class="row">
             <ul id="messagesList">
                 @foreach (var message in messages)
