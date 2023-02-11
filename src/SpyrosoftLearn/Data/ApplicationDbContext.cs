@@ -13,5 +13,7 @@ namespace SpyrosoftLearn.Data
 
         public DbSet<LuckyNumber> LuckyNumbers { get; set; }
         public DbSet<Round> Rounds { get; set; }
+        public DbSet<CatchTheTime> CatchTheTimes { get; set; }
+        public DbSet<UserConfiguration> UserConfigurations { get; set; }
     }
 }

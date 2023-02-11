@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SpyrosoftLearn.Data;
+using SpyrosoftLearn.Models;
 
 namespace SpyrosoftLearn.Areas.Identity.Pages.Account
 {
@@ -30,6 +32,7 @@ namespace SpyrosoftLearn.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -37,7 +40,8 @@ namespace SpyrosoftLearn.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,6 +50,7 @@ namespace SpyrosoftLearn.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _context = context;
         }
 
         /// <summary>
@@ -129,8 +134,17 @@ namespace SpyrosoftLearn.Areas.Identity.Pages.Account
 
                     if (defaultrole != null)
                     {
-                        IdentityResult roleresult = await _userManager.AddToRoleAsync(user, defaultrole.Name);
+                        await _userManager.AddToRoleAsync(user, defaultrole.Name);
                     }
+
+                    var userConfiguration = new UserConfiguration()
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName
+                    };
+
+                    _context.Add(userConfiguration);
+                    _context.SaveChanges();
 
                     _logger.LogInformation("User added to Default role.");
 

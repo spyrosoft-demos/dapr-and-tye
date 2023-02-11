@@ -1,7 +1,12 @@
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Services;
+using Microsoft.AspNetCore.ResponseCompression;
+using SpyrosoftLearn.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +30,29 @@ builder.Services.AddLogging(config =>
     config.AddDebug();
 });
 
+
+//add to use blazor components
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
+
+//add to uze blazorise
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.Immediate = true;
+    })
+    .AddBootstrap5Providers()
+    .AddFontAwesomeIcons();
+
 var app = builder.Build();
+
+
+app.UseResponseCompression();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -50,7 +77,13 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
+//add to use blazor components
+app.MapBlazorHub();
+app.MapHub<IntervalHub>("/intervalhub");
+
+
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
