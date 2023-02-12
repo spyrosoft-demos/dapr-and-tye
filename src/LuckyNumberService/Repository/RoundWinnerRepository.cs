@@ -19,11 +19,11 @@ namespace LuckyNumberService.Repository
             Random rnd = new Random();
             int winnerNumber = rnd.Next(minNumber, (maxNumber + 1));
 
-            _logger.LogInformation($"Winner number is {winnerNumber}");
+            _logger.LogInformation("round winning number: {RoundWinningNumber}", winnerNumber);
 
             try
             {
-                RoundWinner roundWinner = new RoundWinner()
+                RoundWinner roundWinner = new()
                 {
                     RoundId = roundId,
                     MinNumber = minNumber,
@@ -35,11 +35,11 @@ namespace LuckyNumberService.Repository
                 _dbContext.RoundWinners.Add(roundWinner);
                 _dbContext.SaveChanges();
 
-                _logger.LogInformation($"Winner number {winnerNumber} is saved with id {roundWinner.Id}");
+                _logger.LogInformation("round {RoundId} winner inserted, ID: {RoundWinnerId}", roundId, roundWinner.Id);
             }
             catch(Exception ex)
             {
-                _logger.LogError("Error saving roundWinner, ex : "+ ex);
+                _logger.LogError(ex, "error saving roundWinner");
                 return 0;
             }
 

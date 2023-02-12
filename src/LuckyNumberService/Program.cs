@@ -13,10 +13,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 
-var daprClient = new DaprClientBuilder().Build();
-var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
-var connectionString = sec["SqlDB-luckynumbers"];
-
+string? connectionString;
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    connectionString = builder.Configuration.GetConnectionString("SqlDB");
+}
+else
+{
+    var daprClient = new DaprClientBuilder().Build();
+    var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
+    connectionString = sec["SqlDB-luckynumbers"];
+}
 builder.Services.AddDbContext<RoundWinnerContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IRoundWinnerRepository, RoundWinnerRepository>();
 

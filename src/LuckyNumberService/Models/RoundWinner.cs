@@ -1,5 +1,9 @@
-﻿namespace LuckyNumberService.Models
+﻿using System.Diagnostics;
+
+namespace LuckyNumberService.Models
 {
+
+    [DebuggerDisplay("winner number = {WinnerNumber}")]
     public class RoundWinner
     {
         public int Id { get; set; }

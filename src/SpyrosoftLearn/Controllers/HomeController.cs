@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Google.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,7 +40,14 @@ namespace SpyrosoftLearn.Controllers
                 else
                 {
                     _logger.LogInformation("Redirecting to user index page.");
-                    return RedirectToAction("UserIndex");
+
+                    var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
+
+                    ViewBag.UserName = User.Identity.Name;
+                    ViewBag.UserId = user.Id;
+                    ViewBag.UserConfigNumber = userConfigNumber?.Id;
+
+                    return View();
                 }
             }
             else
@@ -47,7 +55,7 @@ namespace SpyrosoftLearn.Controllers
                 _logger.LogInformation("User is not authenticated.");
             }
 
-            return View();
+            return RedirectToAction("Start");
         }
 
         [Authorize(Roles = "Admin")]
@@ -56,7 +64,12 @@ namespace SpyrosoftLearn.Controllers
             return View();
         }
 
-        public async Task<IActionResult> UserIndex()
+        public IActionResult Start()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> RoundGame()
         {      
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -84,6 +97,11 @@ namespace SpyrosoftLearn.Controllers
             _logger.LogError(message);
 
             ViewBag.Message = message;
+            return View();
+        }
+
+        public IActionResult IntervalGame()
+        {
             return View();
         }
     }

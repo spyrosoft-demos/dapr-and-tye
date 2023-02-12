@@ -1,8 +1,12 @@
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Dapr.Client;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using SpyrosoftLearn.Data;
+using SpyrosoftLearn.Hubs;
 using SpyrosoftLearn.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,36 +28,54 @@ builder.Services.AddLogging(config =>
     config.AddDebug();
 });
 
-var daprClient = new DaprClientBuilder().Build();
-var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
-var connectionString = sec["SqlDB-spyrolearn"];
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddResponseCompression(opts =>
 {
-    app.UseMigrationsEndPoint();
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
+
+builder.Services.AddServerSideBlazor();
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.Immediate = true;
+    })
+    .AddBootstrap5Providers()
+    .AddFontAwesomeIcons();
+
+string? connectionString;
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+{
+    connectionString = builder.Configuration.GetConnectionString("SqlDB");
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    var daprClient = new DaprClientBuilder().Build();
+    var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
+    connectionString = sec["SqlDB-spyrolearn"];
 }
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
+var app = builder.Build();
+
+app.UseResponseCompression();
+app.UseExceptionHandler("/Home/Error");
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
 
+app.MapRazorPages();
+app.MapBlazorHub();
+app.MapHub<IntervalHub>("/intervalhub");
+
+
+//  kick off DB migration
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 await context.Database.MigrateAsync();
