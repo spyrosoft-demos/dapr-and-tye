@@ -8,8 +8,8 @@ spec:
   metadata:
   - name: connectionString    
     secretKeyRef:
-      name: ConnectionStrings
-      key:  SqlDB
+      name: mssql
+      key:  SqlDB-state
 
 auth:
   secretStore: local-secret-store
