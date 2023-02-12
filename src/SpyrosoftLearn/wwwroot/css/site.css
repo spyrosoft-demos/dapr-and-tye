@@ -122,3 +122,14 @@ footer {
     margin-top: 20px;
     list-style-type: none;
 }
+
+.table-results {
+    margin-top: 20px;
+}
+
+.table-results thead {    
+    background-color: #4d44c8;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+}

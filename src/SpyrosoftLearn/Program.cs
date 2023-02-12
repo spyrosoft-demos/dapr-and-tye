@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Hubs;
 using SpyrosoftLearn.Services;
+using SpyrosoftLearn.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,10 @@ builder.Services
 
 builder.Services.AddDaprClient();
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILuckyNumberService, LuckyNumberService>();
+builder.Services.AddTransient<IGameResultService, GameResultService>();
 
 builder.Services.AddLogging(config =>
 {
@@ -70,8 +73,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
+
 app.MapBlazorHub();
+app.MapRazorPages();
 app.MapHub<IntervalHub>("/intervalhub");
 
 

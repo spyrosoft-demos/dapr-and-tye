@@ -1,12 +1,12 @@
 ﻿using Dapr.Client;
+using SpyrosoftLearn.Services.Interfaces;
 
 namespace SpyrosoftLearn.Services
 {
     public class LuckyNumberService : ILuckyNumberService
     {
         private readonly DaprClient _daprClient;
-        private static readonly string storeName = "statestore";
-
+        
         public LuckyNumberService(DaprClient daprClient)
         {
             _daprClient = daprClient;

@@ -42,10 +42,12 @@ namespace SpyrosoftLearn.Controllers
                     _logger.LogInformation("Redirecting to user index page.");
 
                     var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
+                    var numberOfClicks = _context.CatchTheTimes.Count(x => x.UserId == user.Id);
 
                     ViewBag.UserName = User.Identity.Name;
                     ViewBag.UserId = user.Id;
                     ViewBag.UserConfigNumber = userConfigNumber?.Id;
+                    ViewBag.NumberOfClicks = numberOfClicks;
 
                     return View();
                 }
@@ -65,6 +67,11 @@ namespace SpyrosoftLearn.Controllers
         }
 
         public IActionResult Start()
+        {
+            return View();
+        }
+
+        public IActionResult Results()
         {
             return View();
         }

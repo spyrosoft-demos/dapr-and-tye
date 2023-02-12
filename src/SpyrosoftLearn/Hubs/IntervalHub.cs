@@ -15,11 +15,14 @@ namespace SpyrosoftLearn.Hubs
 
         public async Task SendMessage(int userNumber, string userId, string userName, DateTime clickTime)
         {
+            var milliseconds = clickTime.Millisecond;
+
             var catchTheTime = new CatchTheTime()
             {
                 UserId = userId,
                 UserName = userName,
-                ClickTime = clickTime    
+                ClickTime = clickTime,
+                NumberOfPoints = (milliseconds <= 500) ? (1000 - milliseconds) : milliseconds
             };
 
             _context.Add(catchTheTime);

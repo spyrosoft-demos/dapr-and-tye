@@ -1,0 +1,52 @@
+﻿@using System.Threading;
+@using SpyrosoftLearn.Services.Interfaces;
+@using SpyrosoftLearn.Dtos;
+
+@inject NavigationManager uriHelper;
+@inject IGameResultService gameResultService
+
+<h3>Game Results</h3>
+
+<table class="table-results table table-striped">
+    <thead>
+        <th>#</th>
+        <td>User Name</td>
+        <td>Catch the Time Points</td>
+        <td>Round Points</td>
+        <td>Total Points</td>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {            
+            <tr>
+                <td>@(countRows++)</td>
+                <td>@item.UserName</td>
+                <td>@item.NumberOfPoints</td>
+                <td>@item.NumberOfLuckyPoints</td>
+                <td>@item.TotalPoints</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    public List<GameResultDto> Model = new List<GameResultDto>();
+    private int countRows { get; set; } = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = gameResultService.GetGameResults();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var timer = new Timer(new TimerCallback(_ =>
+            {
+                uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
+            }), null, 5000, 1000);
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿namespace SpyrosoftLearn.Services
+﻿namespace SpyrosoftLearn.Services.Interfaces
 {
     public interface ILuckyNumberService
     {

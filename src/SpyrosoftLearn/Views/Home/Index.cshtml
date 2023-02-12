@@ -1,3 +1,5 @@
 ﻿<div>   
-    @(await Html.RenderComponentAsync<SpyrosoftLearn.Views.Shared.BlazorComponent.Interval>(RenderMode.ServerPrerendered, new { UserName = @ViewBag.UserName, UserId = @ViewBag.UserId, UserConfigNumber = @ViewBag.UserConfigNumber }))
+    @(await Html.RenderComponentAsync<SpyrosoftLearn.Views.Shared.BlazorComponent.Interval>
+        (RenderMode.ServerPrerendered,
+        new { UserName = @ViewBag.UserName, UserId = @ViewBag.UserId, UserConfigNumber = @ViewBag.UserConfigNumber, NumberOfClicks = @ViewBag.NumberOfClicks }))
 </div>

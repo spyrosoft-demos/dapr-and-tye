@@ -54,6 +54,10 @@
     [Parameter]
     public int UserConfigNumber { get; set; }
 
+    [Parameter]
+    public int NumberOfClicks { get; set; }
+
+    public const int MaxNumberOfClicks = 5;
 
     //signalR
     private HubConnection? hubConnection;
@@ -87,8 +91,8 @@
          }).Build();
 
         hubConnection.On<int, string, DateTime>("ReceiveMessage", ( userNumber, userName, messageTime) =>
-        {
-            var encodedMsg = $"{userNumber}. {userName} => {messageTime}";
+        {            
+            var encodedMsg = $"{userName} => {messageTime.ToString("hh:mm:ss.fff")}";
             var data = new ChartData { UserName = userName, UserNumber = userNumber, MessageTime = messageTime };
 
             messages.Add(encodedMsg);
@@ -104,12 +108,13 @@
     {
         if (hubConnection is not null)
         {
+            NumberOfClicks++;
             await hubConnection.SendAsync("SendMessage", UserConfigNumber, UserId, UserName, DateTime.Now);
         }
     }
 
     public bool IsConnected =>
-        hubConnection?.State == HubConnectionState.Connected;
+        (hubConnection?.State == HubConnectionState.Connected && NumberOfClicks < MaxNumberOfClicks);
 
     public async ValueTask DisposeAsync()
     {
@@ -218,7 +223,7 @@
 
     public class ChartData
     {
-        public string UserName { get; set; }
+        public string UserName { get; set; } = default!;
         public int UserNumber { get; set; }
         public DateTime MessageTime { get; set; }
     }

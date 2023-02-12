@@ -15,6 +15,7 @@
     <link href="~/_content/Blazorise.Bootstrap5/blazorise.bootstrap5.css" rel="stylesheet" />
 </head>
 <body>
+    <base href="/" />
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -29,18 +30,21 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index"> Home </a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-area="" asp-controller="Rounds" asp-action="Index">Rounds</a>
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Rounds" asp-action="Index"> Rounds </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Results"> Results </a>
                                 </li>
                             }
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="RoundGame">Round Game</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="RoundGame"> Round Game </a>
                             </li>
                         }
                         

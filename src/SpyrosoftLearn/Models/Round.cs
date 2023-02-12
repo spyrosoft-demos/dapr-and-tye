@@ -16,6 +16,8 @@
 
         public int? WinnerNumber { get; set; }
 
+        public string? WinnerUserId { get; set; }
+
         public DateTime? CreatedOn { get; set; }
 
         public DateTime? FinishedOn { get; set; }

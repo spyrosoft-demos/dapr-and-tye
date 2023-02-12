@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Models;
-using SpyrosoftLearn.Services;
+using SpyrosoftLearn.Services.Interfaces;
 using System.Data;
 
 namespace SpyrosoftLearn.Controllers
@@ -210,15 +210,21 @@ namespace SpyrosoftLearn.Controllers
                 var minNumber = _context.LuckyNumbers.Where(n => n.RoundId == roundId).Min(n => n.Id);
                 var maxNumber = _context.LuckyNumbers.Where(n => n.RoundId == roundId).Max(n => n.Id);
 
-                _logger.LogInformation($"Calling lucky number service, minNumber {minNumber}, maxNumber {maxNumber}");
+                _logger.LogInformation("Calling lucky number service, minNumber {MinNumber}, maxNumber {MaxNumber}", minNumber, maxNumber);
 
                 var winnerNumber = await _luckyNumberService.GetWinnerNumber(roundId, minNumber, maxNumber);
 
-                _logger.LogInformation($"Lucky number service generated winner, lucky number is {winnerNumber}");
+                _logger.LogInformation("Lucky number service generated winner, lucky number is {WinnerNumber}", winnerNumber);
 
                 if (winnerNumber == 0)
                 {
                     return RedirectToAction("Error", "Home", new { message = "Winner number not generated." });
+                }
+
+                var winner = await _context.LuckyNumbers.FirstAsync(l => l.Id == winnerNumber);
+                if (winner == null)
+                {
+                    return RedirectToAction("Error", "Home", new { message = "Lucky number can't be found, Id: {WinnerNumber}", winnerNumber });
                 }
 
                 var round = await _context.Rounds.SingleAsync(r => r.Id == roundId);
@@ -226,27 +232,24 @@ namespace SpyrosoftLearn.Controllers
                 round.MaxNumber = maxNumber;
                 round.IsActive = false;
                 round.WinnerNumber = winnerNumber;
+                round.WinnerUserId = winner.UserId;
                 round.FinishedOn = DateTime.Now;
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"Round with id {round.Id} is set inactive, winner number is {winnerNumber}");
+                _logger.LogInformation("Round with id {RoundId} is set inactive, winner number is {WinnerNumber}", round.Id, winnerNumber);
 
-                var winner = await _context.LuckyNumbers.FirstAsync(l => l.Id == winnerNumber);
-                if (winner == null)
-                {
-                    return RedirectToAction("Error", "Home", new { message = "Lucky number can't be found, Id: " + winnerNumber });
-                }
+                
 
                 await _luckyNumberService.PublishWinner(winner.UserName);
 
-                _logger.LogInformation($"Published winner name {winner.UserName}");
+                _logger.LogInformation("Published winner name {WinnerUserName}", winner.UserName);
 
                 ViewBag.WinnerName = winner.UserName;
             }
             catch(Exception ex)
             {
-                _logger.LogError("GenerateWinnerNumber exception : " + ex);
+                _logger.LogError(ex, "GenerateWinnerNumber exception");
                 return RedirectToAction("Error", "Home", new { message = "Error generating winner number." });
             }         
 
@@ -272,18 +275,18 @@ namespace SpyrosoftLearn.Controllers
                     RoundId = roundId
                 };
 
-                _logger.LogInformation($"Creating new lucky number, user name {user.UserName}, round id {roundId}");
+                _logger.LogInformation("Creating new lucky number, user name {UserName}, round id {RoundId}", user.UserName, roundId);
 
                 _context.LuckyNumbers.Add(luckyNumber);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"Saved lucky number, lucky number id {luckyNumber.Id}");
+                _logger.LogInformation("Saved lucky number, lucky number id {LuckyNumberId}", luckyNumber.Id);
 
                 ViewBag.LuckyNumber = luckyNumber.Id;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Join round exception, roundId: " + roundId + ", ex: " + ex);
+                _logger.LogError(ex, "Join round exception, roundId: {RoundId} ", roundId);
                 return RedirectToAction("Error", "Home", new { message = "Error joining round id: " + roundId});
             }
 
