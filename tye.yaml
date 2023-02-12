@@ -6,13 +6,16 @@
 #
 name: spyrolearn
 services:
-- name: luckynumberservice
-  project: src/LuckyNumberService/LuckyNumberService.csproj
 - name: spyrosoftlearn
   project: src/SpyrosoftLearn/SpyrosoftLearn.csproj
+- name: luckynumberservice
+  project: src/LuckyNumberService/LuckyNumberService.csproj
 - name: winnersubscriberservice
   project: src/WinnerSubscriberService/WinnerSubscriberService.csproj
+
 extensions:
 - name: dapr
   log-level: debug
   components-path: "./components/local"
+
+registry: acrspyro.azurecr.io

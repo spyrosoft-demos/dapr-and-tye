@@ -5,15 +5,8 @@ namespace LuckyNumberService.DbContexts
 {
     public class RoundWinnerContext : DbContext
     {
-        public RoundWinnerContext(DbContextOptions<RoundWinnerContext> options) : base(options)
-        {
-        }
+        public RoundWinnerContext(DbContextOptions<RoundWinnerContext> options) : base(options) { }
 
-        public DbSet<RoundWinner> RoundWinners { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            
-        }
+        public DbSet<RoundWinner> RoundWinners { get; set; }        
     }
 }

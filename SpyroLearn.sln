@@ -15,6 +15,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{DA1C5EC7
 		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{9179067F-91A2-420E-A43F-E460222CD422}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prod", "prod", "{943103E1-E4E6-4F4E-B81F-129C4E66D0C2}"
+	ProjectSection(SolutionItems) = preProject
+		components\production\pubsub.yaml = components\production\pubsub.yaml
+		components\production\secret.yaml = components\production\secret.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "local", "local", "{AF9394F1-8C45-4625-B545-79B443330510}"
+	ProjectSection(SolutionItems) = preProject
+		components\local\bindings.yaml = components\local\bindings.yaml
+		components\local\configstore.yaml = components\local\configstore.yaml
+		components\local\pubsub.yaml = components\local\pubsub.yaml
+		components\local\secret.yaml = components\local\secret.yaml
+		components\local\secrets.json = components\local\secrets.json
+		components\local\statestore.yaml = components\local\statestore.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +54,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{943103E1-E4E6-4F4E-B81F-129C4E66D0C2} = {9179067F-91A2-420E-A43F-E460222CD422}
+		{AF9394F1-8C45-4625-B545-79B443330510} = {9179067F-91A2-420E-A43F-E460222CD422}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F360B81-FB63-4B09-B13A-4C381BB134C4}

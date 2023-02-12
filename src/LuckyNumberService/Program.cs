@@ -1,6 +1,7 @@
 using LuckyNumberService.DbContexts;
 using LuckyNumberService.Repository;
 using Microsoft.EntityFrameworkCore;
+using Dapr.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +13,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 
-builder.Services.AddDbContext<RoundWinnerContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var daprClient = new DaprClientBuilder().Build();
+var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
+var connectionString = sec["SqlDB-luckynumbers"];
 
+builder.Services.AddDbContext<RoundWinnerContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddTransient<IRoundWinnerRepository, RoundWinnerRepository>();
 
 var app = builder.Build();
