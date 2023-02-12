@@ -41,11 +41,11 @@ namespace SpyrosoftLearn.Controllers
                 {
                     _logger.LogInformation("Redirecting to user index page.");
 
-                    var userConfigNumber = await _context.UserConfigurations.FirstAsync(u => u.UserId == user.Id);
+                    var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
 
                     ViewBag.UserName = User.Identity.Name;
                     ViewBag.UserId = user.Id;
-                    ViewBag.UserConfigNumber = userConfigNumber.Id;
+                    ViewBag.UserConfigNumber = userConfigNumber?.Id;
 
                     return View();
                 }
