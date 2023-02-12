@@ -1,10 +1,13 @@
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
+using Dapr.Client;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using SpyrosoftLearn.Data;
-using SpyrosoftLearn.Services;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Hubs;
+using SpyrosoftLearn.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,16 +29,13 @@ builder.Services.AddLogging(config =>
 });
 
 
-//add to use blazor components
-builder.Services.AddServerSideBlazor();
-
 builder.Services.AddResponseCompression(opts =>
 {
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
 
-//add to uze blazorise
+builder.Services.AddServerSideBlazor();
 builder.Services
     .AddBlazorise(options =>
     {
@@ -44,31 +44,25 @@ builder.Services
     .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
-var daprClient = new DaprClientBuilder().Build();
-var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
-var connectionString = sec["SqlDB-spyrolearn"];
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-var app = builder.Build();
-
-
-app.UseResponseCompression();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+string? connectionString;
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
 {
-    app.UseMigrationsEndPoint();
+    connectionString = builder.Configuration.GetConnectionString("SqlDB");
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    var daprClient = new DaprClientBuilder().Build();
+    var sec = await daprClient.GetSecretAsync("local-secret-store", "mssql");
+    connectionString = sec["SqlDB-spyrolearn"];
 }
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
+var app = builder.Build();
+
+app.UseResponseCompression();
+app.UseExceptionHandler("/Home/Error");
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -77,12 +71,11 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-//add to use blazor components
 app.MapBlazorHub();
 app.MapHub<IntervalHub>("/intervalhub");
 
 
-
+//  kick off DB migration
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 await context.Database.MigrateAsync();
