@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Hubs;
 using SpyrosoftLearn.Services;
-using Microsoft.AspNetCore.ResponseCompression;
-using SpyrosoftLearn.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
