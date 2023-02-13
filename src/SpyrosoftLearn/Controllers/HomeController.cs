@@ -71,11 +71,13 @@ namespace SpyrosoftLearn.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Results()
         {
             return View();
         }
 
+        [Authorize(Roles = "Default")]
         public async Task<IActionResult> RoundGame()
         {      
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
