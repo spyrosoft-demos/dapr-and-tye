@@ -17,6 +17,7 @@ namespace WinnerSubscriberService.Controllers
         [HttpPost("winner")]
         public void CreateWinner([FromBody] string winnerName)
         {
+            //  Dapr - Pub/Sub
             _logger.LogInformation("Subscriber recieved winner name : {WinnerName}", winnerName);
         }
     }

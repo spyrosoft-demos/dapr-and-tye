@@ -14,7 +14,7 @@ namespace SpyrosoftLearn.Services
 
         public async Task<int> GetWinnerNumber(int roundId, int minNumber, int maxNumber)
         {
-            //service to service invocation
+            //  Dapr - Service to service
             var winnerNumber = await _daprClient.InvokeMethodAsync<int>(
                 HttpMethod.Get,
                 "luckynumberservice",
@@ -26,7 +26,7 @@ namespace SpyrosoftLearn.Services
 
         public async Task PublishWinner(string winnerName)
         {
-            //pubsub
+            //  Dapr - Pub/Sub
             await _daprClient.PublishEventAsync("my-pubsub", "newWinner", winnerName);
         }
     }

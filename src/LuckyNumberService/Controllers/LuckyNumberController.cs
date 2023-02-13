@@ -20,6 +20,7 @@ namespace LuckyNumberService.Controllers
         [Route("GetWinnerNumber/{roundId}/{minNumber}/{maxNumber}")]
         public IActionResult GetWinnerNumber(int roundId, int minNumber, int maxNumber)
         {
+            // Dapr - Service to service
             _logger.LogInformation($"LuckyNumberController/GetWinnerNumber is called for roundId {roundId}, minNumber {minNumber}, maxNumber {maxNumber}");
             var winnerNumber = _roundWinnerRepository.GetWinnerNumber(roundId, minNumber, maxNumber);
             return new OkObjectResult(winnerNumber);
