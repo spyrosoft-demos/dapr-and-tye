@@ -13,6 +13,14 @@ services:
 - name: winnersubscriberservice
   project: src/WinnerSubscriberService/WinnerSubscriberService.csproj
 
+ingress:
+  - name: ingress
+    bindings:
+      - port: 8080
+    rules:
+      - path: /
+        service: spyrosoftlearn      
+
 extensions:
 - name: dapr
   log-level: debug
