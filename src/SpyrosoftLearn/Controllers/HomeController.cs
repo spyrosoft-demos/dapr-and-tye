@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Data;
+using SpyrosoftLearn.Dtos;
 
 namespace SpyrosoftLearn.Controllers
 {
@@ -32,25 +33,22 @@ namespace SpyrosoftLearn.Controllers
                 }
 
                 var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
-                if (isAdmin)
+
+                _logger.LogInformation("Redirecting to user index page.");
+
+                var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
+                var numberOfClicks = _context.CatchTheTimes.Count(x => x.UserId == user.Id);
+
+                var intervalDto = new IntervalDto()
                 {
-                    _logger.LogInformation("Redirecting to admin index page.");
-                    return RedirectToAction("AdminIndex");
-                }
-                else
-                {
-                    _logger.LogInformation("Redirecting to user index page.");
+                    UserName = User.Identity.Name,
+                    UserId = user.Id,
+                    UserConfigNumber = userConfigNumber?.Id,
+                    NumberOfClicks = numberOfClicks,
+                    IsAdmin = isAdmin
+                };
 
-                    var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
-                    var numberOfClicks = _context.CatchTheTimes.Count(x => x.UserId == user.Id);
-
-                    ViewBag.UserName = User.Identity.Name;
-                    ViewBag.UserId = user.Id;
-                    ViewBag.UserConfigNumber = userConfigNumber?.Id;
-                    ViewBag.NumberOfClicks = numberOfClicks;
-
-                    return View();
-                }
+                return View(intervalDto);
             }
             else
             {

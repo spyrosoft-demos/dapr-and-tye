@@ -80,7 +80,7 @@ footer {
 }
 
 .p-30{
-    margin-top:30px;
+    padding-top:30px;
 }
 
 .p-50 {
@@ -105,17 +105,33 @@ footer {
     background-color: gray !important;
 }
 
-.chart-container {
+.interval-container {
     text-align: center;
     width: 100%;
     overflow: auto;
-    padding: 30px;
+}
+
+.chart-container {
+    text-align: center;
+    width: 50%;
+    float: left;
+    padding-top: 30px;
+    display: inline-block;
+}
+
+.results-container {
+    text-align: center;
+    width: 40%;
+    margin-left:5%;
+    float: left;
+    padding-top: 30px;
+    display: inline-block;
 }
 
 .chart-table-container {
     width: 100%;
-    overflow: auto;
     padding: 30px;
+    overflow: auto;
 }
 
 #messagesList {
@@ -125,6 +141,14 @@ footer {
 
 .table-results {
     margin-top: 20px;
+    max-width: 100%;
+    table-layout: fixed;   
+}
+.table-results td {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .table-results thead {    
@@ -132,4 +156,49 @@ footer {
     color: white;
     font-weight: bold;
     font-size: 20px;
+}
+
+.chart-container h2 {
+    color: #4d44c8;
+}
+
+main {
+    margin-bottom: 70px !important;
+}
+
+.hello-text{
+    padding: 10px;
+}
+
+.container {
+    min-width: 100% !important;
+}
+
+.small-container{
+    padding-left:50px;
+}
+
+@media only screen and (max-width: 1200px) {
+    main{
+        width:100% !important;
+    }
+
+    .small-container {
+        padding-left: 0px;
+    }
+
+    .interval-container {
+        width: 100%;
+        margin-left: 0;
+        min-width:400px;
+    }
+
+    .chart-container {
+        width: 95%;
+    }
+
+    .results-container {
+        width: 100%;
+        margin-left: 0;
+    }
 }

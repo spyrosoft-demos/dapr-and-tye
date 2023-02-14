@@ -1,4 +1,6 @@
-﻿<div>   
-    @(await Html.RenderComponentAsync<SpyrosoftLearn.Views.Shared.BlazorComponent.GameResults>
-            (RenderMode.ServerPrerendered))
+﻿<div class="row justify-content-md-center">
+    <div class="col-md-8">
+        @(await Html.RenderComponentAsync<SpyrosoftLearn.Views.Shared.BlazorComponent.GameResults>
+                (RenderMode.ServerPrerendered))
+    </div>
 </div>

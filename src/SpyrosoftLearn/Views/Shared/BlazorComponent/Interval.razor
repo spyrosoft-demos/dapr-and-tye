@@ -2,46 +2,66 @@
 @using Blazorise.Charts;
 @using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.SignalR.Client
+@using SpyrosoftLearn.Dtos;
+@using SpyrosoftLearn.Services.Interfaces;
+
 @inject NavigationManager Navigation
+@inject IGameResultService gameResultService
+
 @implements IAsyncDisposable
 
-<div class="chart-container">
-     <h1>Catch the Time</h1>
-     <h2>@UserConfigNumber . @UserName</h2>
-     <br/>
+<div class="interval-container">
+    <div class="chart-container">
+        <h1>Catch the Time</h1>
+        <h2>@UserConfigNumber . @UserName</h2>
+        <br />
 
-    <LineChart @ref="@horizontalLineChart" TItem="LiveDataPoint" OptionsObject="@horizontalLineChartOptions">
-        <ChartStreaming @ref="@chartStreaming"
-                    TItem="LiveDataPoint"
-                    Options="new ChartStreamingOptions { Delay = 1 }"
-                    Refreshed="@OnHorizontalLineRefreshed"
-                    />
-    </LineChart>
+        <LineChart @ref="@horizontalLineChart" TItem="LiveDataPoint" OptionsObject="@horizontalLineChartOptions">
+            <ChartStreaming @ref="@chartStreaming"
+                            TItem="LiveDataPoint"
+                            Options="new ChartStreamingOptions { Delay = 1 }"
+                            Refreshed="@OnHorizontalLineRefreshed" />
+        </LineChart>
 
-@*    <Row>
-        <Column>
-            <Button Color="Color.Primary" Clicked="@(()=>chartStreaming.Pause())">Pause</Button>
-            <Button Color="Color.Primary" Clicked="@(()=>chartStreaming.Play())">Play</Button>
-        </Column>
-    </Row>*@
 
-    
-   
-    <div class="chart-table-container">
-        <div class="row">
-            <button class="create-round-button" @onclick="Send" disabled="@(!IsConnected)">Send</button>
-        </div>
+        <div class="chart-table-container">
+            <div class="row">
+                <button class="create-round-button" @onclick="Send" disabled="@(!IsConnected)">Send</button>
+            </div>
 
-        <div class="row">
+            @* <div class="row">
             <ul id="messagesList">
-                @foreach (var message in messages)
-                {
-                    <li>@message</li>
-                }
+            @foreach (var message in messages)
+            {
+            <li>@message</li>
+            }
             </ul>
-        </div>    
+            </div>    *@
+        </div>
+    </div>
+    <div class="results-container">
+        <table class="table-results table table-striped">
+            <thead>
+                <td>User</td>
+                <td>Game Points</td>
+                <td>Round Points</td>
+                <td>Total Points</td>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {            
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.NumberOfPoints</td>
+                        <td>@item.NumberOfLuckyPoints</td>
+                        <td>@item.TotalPoints</td>
+                    </tr>
+                }
+            </tbody>
+        </table>       
     </div>
 </div>
+
 
 
 @code{
@@ -57,7 +77,14 @@
     [Parameter]
     public int NumberOfClicks { get; set; }
 
+    [Parameter]
+    public bool IsAdmin { get; set; }
+
     public const int MaxNumberOfClicks = 5;
+
+    public List<GameResultDto> Model = new List<GameResultDto>();
+
+    private int countRows { get; set; } = 1;
 
     //signalR
     private HubConnection? hubConnection;
@@ -67,7 +94,6 @@
     //chart
     LineChart<LiveDataPoint> horizontalLineChart;
     ChartStreaming<LiveDataPoint> chartStreaming;
-    //Random random = new Random(DateTime.Now.Millisecond);
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,6 +103,9 @@
         //    .Build();
 
         //for http
+
+        Model = gameResultService.GetGameResults();
+
         hubConnection = new HubConnectionBuilder()
          .WithUrl(Navigation.ToAbsoluteUri("/intervalhub"), (opts) =>
          {
@@ -98,6 +127,8 @@
             messages.Add(encodedMsg);
             chartMessages.Add(data);
 
+            Model = gameResultService.GetGameResults();
+
             InvokeAsync(StateHasChanged);
         });
 
@@ -114,7 +145,7 @@
     }
 
     public bool IsConnected =>
-        (hubConnection?.State == HubConnectionState.Connected && NumberOfClicks < MaxNumberOfClicks);
+        (hubConnection?.State == HubConnectionState.Connected && NumberOfClicks < MaxNumberOfClicks && IsAdmin == false);
 
     public async ValueTask DisposeAsync()
     {
@@ -123,11 +154,6 @@
             await hubConnection.DisposeAsync();
         }
     }
-
-    //chart
-    //LineChart<LiveDataPoint> horizontalLineChart;
-    //ChartStreaming<LiveDataPoint>  chartStreaming;
-    //Random random = new Random( DateTime.Now.Millisecond );
 
     string[] Labels = { "Red", "Blue", "Yellow", "Green", "Purple", "Orange" };
     List<string> backgroundColors = new List<string> { ChartColor.FromRgba( 255, 99, 132, 0.2f ), ChartColor.FromRgba( 54, 162, 235, 0.2f ), ChartColor.FromRgba( 255, 206, 86, 0.2f ), ChartColor.FromRgba( 75, 192, 192, 0.2f ), ChartColor.FromRgba( 153, 102, 255, 0.2f ), ChartColor.FromRgba( 255, 159, 64, 0.2f ) };
@@ -139,7 +165,7 @@
 
         public object Y { get; set; }
     }
-
+    
     object horizontalLineChartOptions = new
     {
         Scales = new
@@ -152,11 +178,7 @@
                     Text = "Value"
                 }
             }
-        },
-        //Interaction = new
-        //{
-        //    intersect = true
-        //}
+        }
     };
 
     protected override async Task OnAfterRenderAsync( bool firstRender )
@@ -184,7 +206,7 @@
         {
             Data = new List<LiveDataPoint>(),
             Label = "Catch the Time",
-            BackgroundColor = backgroundColors[0],
+            BackgroundColor = backgroundColors[2],
             PointBackgroundColor = borderColors[0],
             PointRadius=5,
             BorderColor = borderColors[0],
@@ -194,13 +216,7 @@
     }
 
     Task OnHorizontalLineRefreshed( ChartStreamingData<LiveDataPoint> data)
-    {        
-        //data.Value = new LiveDataPoint
-        //{
-        //    X = DateTime.Now,
-        //    Y = RandomScalingFactor(),
-        //};
-
+    { 
         if (chartMessages.Any())
         {
             var firstMessage = chartMessages.First();
@@ -215,11 +231,6 @@
 
         return Task.CompletedTask;
     }
-
-    //double RandomScalingFactor()
-    //{
-    //    return ( random.NextDouble() > 0.5 ? 1.0 : -1.0 ) * Math.Round( random.NextDouble() * 100 );
-    //}
 
     public class ChartData
     {
