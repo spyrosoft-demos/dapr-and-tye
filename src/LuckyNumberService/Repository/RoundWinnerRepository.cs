@@ -16,7 +16,7 @@ namespace LuckyNumberService.Repository
 
         public int GetWinnerNumber(int roundId, int minNumber, int maxNumber)
         {
-            Random rnd = new Random();
+            Random rnd = new();
             int winnerNumber = rnd.Next(minNumber, (maxNumber + 1));
 
             _logger.LogInformation("round winning number: {RoundWinningNumber}", winnerNumber);
