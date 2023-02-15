@@ -1,9 +1,8 @@
 ﻿using SpyrosoftLearn.Dtos;
 
-namespace SpyrosoftLearn.Services.Interfaces
+namespace SpyrosoftLearn.Services.Interfaces;
+
+public interface IGameResultService
 {
-    public interface IGameResultService
-    {
-        List<GameResultDto> GetGameResults();
-    }
+    List<GameResultDto> GetGameResults();
 }

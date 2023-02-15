@@ -1,9 +1,8 @@
-﻿namespace SpyrosoftLearn.Services.Interfaces
-{
-    public interface ILuckyNumberService
-    {
-        Task<int> GetWinnerNumber(int roundId, int minNumber, int maxNumber);
+﻿namespace SpyrosoftLearn.Services.Interfaces;
 
-        Task PublishWinner(string winnerName);
-    }
+public interface ILuckyNumberService
+{
+    Task<int> GetWinnerNumber(int roundId, int minNumber, int maxNumber);
+
+    Task PublishWinner(string winnerName);
 }
