@@ -8,16 +8,16 @@ name: tye-demo
 services:
 - name: backend
   project: backend/backend.csproj
-  replicas: 2
+  replicas: 3
 - name: frontend
   project: frontend/frontend.csproj
 
-ingress:
-  - name: ingress
-    bindings:
-      - port: 8080
-    rules:
-      - path: /b
-        service: backend
-      - path: /f
-        service: frontend
+# ingress:
+#   - name: ingress
+#     bindings:
+#       - port: 8080
+#     rules:
+#       - path: /b
+#         service: backend
+#       - path: /f
+#         service: frontend
