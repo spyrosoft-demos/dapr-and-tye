@@ -262,10 +262,18 @@ namespace SpyrosoftLearn.Controllers
             try
             {
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                
+
                 if (user == null)
                 {
                     return RedirectToAction("Error", "Home", new { message = "User can't be found, name: " + User.Identity.Name });
+                }
+
+                var luckyNumberUser = _context.LuckyNumbers.FirstOrDefault(x => x.RoundId == roundId && x.UserId == user.Id);
+
+                if (luckyNumberUser != null)
+                {
+                    ViewBag.LuckyNumber = luckyNumberUser.Id;
+                    return View();
                 }
 
                 var luckyNumber = new LuckyNumber

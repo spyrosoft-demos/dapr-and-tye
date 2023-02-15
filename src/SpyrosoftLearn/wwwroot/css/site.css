@@ -168,6 +168,7 @@ main {
 
 .hello-text{
     padding: 10px;
+    color:gold;
 }
 
 .container {
@@ -200,5 +201,9 @@ main {
     .results-container {
         width: 100%;
         margin-left: 0;
+    }
+
+    .table-results thead {
+        font-size: 16px;
     }
 }
