@@ -8,6 +8,7 @@ builder.Services.AddHttpClient<WeatherClient>(client =>
     var host = builder.Configuration.GetValue<string>("service:backend:host");
     var port = builder.Configuration.GetValue<string>("service:backend:port");
     client.BaseAddress = new Uri($"http://{host}:{port}");
+    Console.WriteLine("backend url:{0}:{1}", host, port);
 });
 
 
