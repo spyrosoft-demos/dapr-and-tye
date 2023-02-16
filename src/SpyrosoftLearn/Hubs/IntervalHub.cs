@@ -13,7 +13,7 @@ public class IntervalHub : Hub
         _context = context;
     }
 
-    public async Task SendMessage(int userNumber, string userId, string userName, DateTime clickTime)
+    public async Task SendMessage(int userNumber, string userId, string userName, DateTime clickTime, int? activeRoundId)
     {
         var milliseconds = clickTime.Millisecond;
 
@@ -22,6 +22,7 @@ public class IntervalHub : Hub
             UserId = userId,
             UserName = userName,
             ClickTime = clickTime,
+            RoundId = activeRoundId.GetValueOrDefault(),
             NumberOfPoints = (milliseconds <= 500) ? (1000 - milliseconds) : milliseconds
         };
 

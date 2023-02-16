@@ -80,6 +80,9 @@
     [Parameter]
     public bool IsAdmin { get; set; }
 
+    [Parameter]
+    public int? ActiveRoundId { get; set; }
+
     public const int MaxNumberOfClicks = 5;
 
     public List<GameResultDto> Model = new List<GameResultDto>();
@@ -104,7 +107,7 @@
 
         //for http
 
-        Model = gameResultService.GetGameResults();
+        Model = await gameResultService.GetGameResults();
 
         hubConnection = new HubConnectionBuilder()
          .WithUrl(Navigation.ToAbsoluteUri("/intervalhub"), (opts) =>
@@ -119,7 +122,7 @@
                  };
          }).Build();
 
-        hubConnection.On<int, string, DateTime>("ReceiveMessage", ( userNumber, userName, messageTime) =>
+        hubConnection.On<int, string, DateTime>("ReceiveMessage", async ( userNumber, userName, messageTime) =>
         {            
             var encodedMsg = $"{userName} => {messageTime.ToString("hh:mm:ss.fff")}";
             var data = new ChartData { UserName = userName, UserNumber = userNumber, MessageTime = messageTime };
@@ -127,7 +130,7 @@
             messages.Add(encodedMsg);
             chartMessages.Add(data);
 
-            Model = gameResultService.GetGameResults();
+            Model = await gameResultService.GetGameResults();
 
             InvokeAsync(StateHasChanged);
         });
@@ -140,12 +143,15 @@
         if (hubConnection is not null)
         {
             NumberOfClicks++;
-            await hubConnection.SendAsync("SendMessage", UserConfigNumber, UserId, UserName, DateTime.Now);
+            await hubConnection.SendAsync("SendMessage", UserConfigNumber, UserId, UserName, DateTime.Now, ActiveRoundId);
         }
     }
 
     public bool IsConnected =>
-        (hubConnection?.State == HubConnectionState.Connected && NumberOfClicks < MaxNumberOfClicks && IsAdmin == false);
+        (hubConnection?.State == HubConnectionState.Connected 
+            && NumberOfClicks < MaxNumberOfClicks 
+            && IsAdmin == false
+            && ActiveRoundId != null);
 
     public async ValueTask DisposeAsync()
     {

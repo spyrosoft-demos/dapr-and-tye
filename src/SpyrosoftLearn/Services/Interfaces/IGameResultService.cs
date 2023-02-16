@@ -4,5 +4,5 @@ namespace SpyrosoftLearn.Services.Interfaces;
 
 public interface IGameResultService
 {
-    List<GameResultDto> GetGameResults();
+    Task<List<GameResultDto>> GetGameResults();
 }

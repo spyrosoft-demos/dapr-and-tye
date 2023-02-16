@@ -230,7 +230,6 @@ public class RoundsController : Controller
             var round = await _context.Rounds.SingleAsync(r => r.Id == roundId);
             round.MinNumber = minNumber;
             round.MaxNumber = maxNumber;
-            round.IsActive = false;
             round.WinnerNumber = winnerNumber;
             round.WinnerUserId = winner.UserId;
             round.FinishedOn = DateTime.Now;

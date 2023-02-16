@@ -37,7 +37,14 @@ public class HomeController : Controller
             _logger.LogInformation("Redirecting to user index page.");
 
             var userConfigNumber = await _context.UserConfigurations.FirstOrDefaultAsync(u => u.UserId == user.Id);
-            var numberOfClicks = _context.CatchTheTimes.Count(x => x.UserId == user.Id);
+            var activeRound = await _context.Rounds.FirstOrDefaultAsync(r => r.IsActive == true);
+
+            int numberOfClicks = 0;
+
+            if (activeRound != null)
+            {
+                numberOfClicks = await _context.CatchTheTimes.CountAsync(x => x.UserId == user.Id && x.RoundId == activeRound.Id);
+            }
 
             var intervalDto = new IntervalDto()
             {
@@ -45,7 +52,8 @@ public class HomeController : Controller
                 UserId = user.Id,
                 UserConfigNumber = userConfigNumber?.Id,
                 NumberOfClicks = numberOfClicks,
-                IsAdmin = isAdmin
+                IsAdmin = isAdmin,
+                ActiveRoundId = activeRound?.Id
             };
 
             return View(intervalDto);
@@ -85,6 +93,8 @@ public class HomeController : Controller
             return RedirectToAction("Error", new { message = "User can't be found."});
         }
 
+        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
         var joinedRounds = await _context.LuckyNumbers
             .Where(l => l.UserId == user.Id)
             .Select(l => l.RoundId)
@@ -94,6 +104,8 @@ public class HomeController : Controller
         var round = await _context.Rounds
             .Where(r => r.IsActive == true && !joinedRounds.Contains(r.Id))
             .OrderByDescending(r => r.CreatedOn).ToListAsync();
+
+        ViewBag.IsAdmin = isAdmin;
 
         return View(round);
     }

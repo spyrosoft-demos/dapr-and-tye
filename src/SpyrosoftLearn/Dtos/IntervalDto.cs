@@ -11,4 +11,6 @@ public class IntervalDto
     public int NumberOfClicks { get; set; }
 
     public bool IsAdmin { get; set; } = false;
+
+    public int? ActiveRoundId { get; set; }
 }

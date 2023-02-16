@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SpyrosoftLearn.Controllers;
 using SpyrosoftLearn.Data;
 using SpyrosoftLearn.Dtos;
@@ -19,23 +20,30 @@ public class GameResultService : IGameResultService
         _userManager = userManager;
     }
 
-    public List<GameResultDto> GetGameResults()
+    public async Task<List<GameResultDto>> GetGameResults()
     {
         var gameResultDtos = new List<GameResultDto>();
 
         try
         {
+            var activeRound = await _context.Rounds.FirstOrDefaultAsync(r => r.IsActive == true);
+
+            if (activeRound == null)
+            {
+                return gameResultDtos;
+            }
+
             gameResultDtos = _context.CatchTheTimes
-            .GroupBy(c => c.UserId)
+            .Where(x => x.RoundId == activeRound.Id)
+            .GroupBy(c => c.UserId)            
             .Select(x => new GameResultDto
             {
                 UserId = x.First().UserId,
                 UserName = x.First().UserName,
                 NumberOfPoints = x.Sum(p => p.NumberOfPoints),
                 NumberOfLuckyPoints = 0,
-                TotalPoints = x.Sum(p => p.NumberOfPoints)
-            })
-            .OrderByDescending(x => x.NumberOfPoints)
+                TotalPoints = x.Sum(p => p.NumberOfPoints)                
+            })            
             .ToList();
 
             if (!gameResultDtos.Any())
@@ -43,23 +51,24 @@ public class GameResultService : IGameResultService
                 return gameResultDtos;
             }
 
-            var roundWinnerUserIds = _context.Rounds.Where(x => x.WinnerUserId != null).Select(x => x.WinnerUserId).ToList();
+            var roundWinnerUser = await _context.Rounds
+                .SingleOrDefaultAsync(x => x.WinnerUserId != null && x.Id == activeRound.Id);
 
-            foreach (var winnerUserId in roundWinnerUserIds)
+            if(roundWinnerUser != null)
             {
-                var user = gameResultDtos.SingleOrDefault(x => x.UserId == winnerUserId);
+                var user = gameResultDtos.SingleOrDefault(x => x.UserId == roundWinnerUser.WinnerUserId);
                 if (user != null)
                 {
                     user.NumberOfLuckyPoints = 50;
                     user.TotalPoints += 50;
                 }
-            }                
+            }            
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "GetGameResults exception");
         }
 
-        return gameResultDtos;
+        return gameResultDtos.OrderByDescending(x => x.TotalPoints).ToList();
     }
 }

@@ -11,4 +11,8 @@ public class CatchTheTime
     public DateTime ClickTime { get; set; }    
     
     public int NumberOfPoints { get; set; }
+
+    public Round? Round { get; set; }
+
+    public int RoundId { get; set; }
 }

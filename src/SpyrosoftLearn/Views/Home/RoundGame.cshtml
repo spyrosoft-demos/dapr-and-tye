@@ -17,10 +17,14 @@ else
         {
             <div class="row justify-content-sm-center p-30">
                 <div class="col-md-auto">
-                        <input type="button" class="join-round-button" value="Join Round: @round.Name" onclick="location.href='@Url.Action("JoinRound", "Rounds", new { roundId = round.Id })'" />
+                        <input type="button" 
+                            class="join-round-button" 
+                            value="Join Round: @round.Name"
+                            disabled="@ViewBag.IsAdmin"
+                            onclick="location.href='@Url.Action("JoinRound", "Rounds", new { roundId = round.Id })'" />
                     </div>
                 </div>
-        }
+        }           
 
         <div class="row justify-content-sm-center content-center">
             <div class="col-sm-4 p-30">
