@@ -21,7 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components-production", "co
 		components\local\statestore.yaml = components\local\statestore.yaml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "manifests", "manifests", "{91A5BA87-88CC-4D9E-9C0F-F7E8705E690B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C157FC23-855F-4285-85F6-D9E40CC42C91}"
+	ProjectSection(SolutionItems) = preProject
+		tye.yaml = tye.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

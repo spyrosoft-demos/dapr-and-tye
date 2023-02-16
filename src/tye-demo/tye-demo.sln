@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend", "backend\backend.csproj", "{D06E16D9-9966-4F3A-B954-1C95FCE1CF83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend", "backend\backend.csproj", "{D06E16D9-9966-4F3A-B954-1C95FCE1CF83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frontend", "frontend\frontend.csproj", "{D40A330C-9D73-43E3-8A57-4BB67CB43CA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "frontend", "frontend\frontend.csproj", "{D40A330C-9D73-43E3-8A57-4BB67CB43CA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "yaml", "yaml", "{5D2B04D5-6305-4FD0-8B70-CB71936F88B5}"
+	ProjectSection(SolutionItems) = preProject
+		tye.yaml = tye.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D06E16D9-9966-4F3A-B954-1C95FCE1CF83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +26,11 @@ Global
 		{D40A330C-9D73-43E3-8A57-4BB67CB43CA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D40A330C-9D73-43E3-8A57-4BB67CB43CA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D40A330C-9D73-43E3-8A57-4BB67CB43CA6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EF8871F-9245-41A4-B855-591E5715BF00}
 	EndGlobalSection
 EndGlobal
